@@ -6,17 +6,41 @@ namespace CadastroAluno.Test
 {
     public class AlunoTest
     {
-        [Fact]
-        public void AtualizarDadosTeste()
+        [Theory]
+        [InlineData("Kaue", "T92")]
+        [InlineData("", "T94")]
+        [InlineData("Pedro", "")]
+        [InlineData("", "")]
+        public void AtualizarDadosTesteRetornaTrueEmQualquerCircunstancia(string nome, string turma)
         {
             //arrange
             Aluno aluno = new Aluno();
+            aluno.Nome = "Mael";
+            aluno.Turma = "T91";
 
             //act
-            aluno.AtualizarDados("Kauê","t91");
+            aluno.AtualizarDados(nome, turma);
 
             //assert
-            //Assert.
+            Assert.Equal(aluno.Nome, nome);
+            Assert.Equal(aluno.Turma, turma);
         }
+        [Theory]
+        [InlineData(5)]
+        [InlineData(9)]
+        public void MediaRetornaTrueCasoNotaMaiorQueOuIgualA5(double nota)
+        {
+            //arrange
+            Aluno aluno = new Aluno();
+            aluno.Media = nota;
+
+            //act
+            var result = aluno.VerificaAprovacao();
+
+            //assert
+            Assert.True(result);
+        }
+        //[Fact]
+        //public void AtualizaMedia(double nota)
     }
 }
