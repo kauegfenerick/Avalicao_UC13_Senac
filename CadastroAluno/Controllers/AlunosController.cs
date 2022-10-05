@@ -7,34 +7,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CadastroAluno.Data;
 using CadastroAluno.Models;
+using CadastroAluno.Repository;
 
 namespace CadastroAluno.Controllers
 {
     public class AlunosController : Controller
     {
-        private readonly CadastroAlunoContext _context;
+        private readonly AlunoRepository _repository;
 
-        public AlunosController(CadastroAlunoContext context)
+        public AlunosController(AlunoRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Alunos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Aluno.ToListAsync());
+            return View(await _repository.GetAlunos());
         }
 
         // GET: Alunos/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var aluno = await _context.Aluno
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var aluno = await _repository.GetAluno(id);
             if (aluno == null)
             {
                 return NotFound();
@@ -58,8 +58,7 @@ namespace CadastroAluno.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(aluno);
-                await _context.SaveChangesAsync();
+                await _repository.AddAluno(aluno);
                 return RedirectToAction(nameof(Index));
             }
             return View(aluno);
@@ -73,7 +72,7 @@ namespace CadastroAluno.Controllers
                 return NotFound();
             }
 
-            var aluno = await _context.Aluno.FindAsync(id);
+            var aluno = await _repository.Aluno.FindAsync(id);
             if (aluno == null)
             {
                 return NotFound();
@@ -97,8 +96,8 @@ namespace CadastroAluno.Controllers
             {
                 try
                 {
-                    _context.Update(aluno);
-                    await _context.SaveChangesAsync();
+                    _repository.Update(aluno);
+                    await _repository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,7 +123,7 @@ namespace CadastroAluno.Controllers
                 return NotFound();
             }
 
-            var aluno = await _context.Aluno
+            var aluno = await _repository.Aluno
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (aluno == null)
             {
@@ -139,15 +138,15 @@ namespace CadastroAluno.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var aluno = await _context.Aluno.FindAsync(id);
-            _context.Aluno.Remove(aluno);
-            await _context.SaveChangesAsync();
+            var aluno = await _repository.Aluno.FindAsync(id);
+            _repository.Aluno.Remove(aluno);
+            await _repository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AlunoExists(int id)
         {
-            return _context.Aluno.Any(e => e.Id == id);
+            return _repository.Aluno.Any(e => e.Id == id);
         }
     }
 }

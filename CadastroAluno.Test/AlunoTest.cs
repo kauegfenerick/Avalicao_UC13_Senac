@@ -1,3 +1,4 @@
+using CadastroAluno.Models;
 using System;
 using Xunit;
 
@@ -8,7 +9,14 @@ namespace CadastroAluno.Test
         [Fact]
         public void AtualizarDadosTeste()
         {
+            //arrange
+            Aluno aluno = new Aluno();
 
+            //act
+            aluno.AtualizarDados("Kauê","t91");
+
+            //assert
+            Assert.
         }
     }
 }
