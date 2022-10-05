@@ -10,9 +10,8 @@ namespace CadastroAluno.Contracts
     {
         Task<List<Aluno>> GetAlunos();
 
-        Task<Aluno> GetAluno(int id);
+        Task<Aluno> GetAluno(int? id);
         Task<Aluno> AddAluno(Aluno aluno);
-
         Task<int> UpdateAluno(int id, Aluno alunoAlterado);
 
         Task DeleteAluno(int id);

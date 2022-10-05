@@ -8,14 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using CadastroAluno.Data;
 using CadastroAluno.Models;
 using CadastroAluno.Repository;
+using CadastroAluno.Contracts;
 
 namespace CadastroAluno.Controllers
 {
     public class AlunosController : Controller
     {
-        private readonly AlunoRepository _repository;
+        private readonly IAlunoRepository _repository;
 
-        public AlunosController(AlunoRepository repository)
+        public AlunosController(IAlunoRepository repository)
         {
             _repository = repository;
         }
@@ -29,11 +30,6 @@ namespace CadastroAluno.Controllers
         // GET: Alunos/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var aluno = await _repository.GetAluno(id);
             if (aluno == null)
             {
@@ -67,6 +63,21 @@ namespace CadastroAluno.Controllers
         // POST: Alunos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var aluno = await _repository.GetAluno(id);
+            if (aluno == null)
+            {
+                return NotFound();
+            }
+            return View(aluno);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Turma,Media")] Aluno aluno)
@@ -81,6 +92,21 @@ namespace CadastroAluno.Controllers
                 await _repository.UpdateAluno(id, aluno);
                 return RedirectToAction(nameof(Index));
             }
+            return View(aluno);
+        }
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var aluno = await _repository.GetAluno(id);
+            if (aluno == null)
+            {
+                return NotFound();
+            }
+
             return View(aluno);
         }
 

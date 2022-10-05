@@ -16,7 +16,7 @@ namespace CadastroAluno.Test
             aluno.AtualizarDados("Kauê","t91");
 
             //assert
-            Assert.
+            //Assert.
         }
     }
 }

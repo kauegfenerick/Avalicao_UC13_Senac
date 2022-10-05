@@ -10,6 +10,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using CadastroAluno.Data;
+using CadastroAluno.Contracts;
+using CadastroAluno.Repository;
 
 namespace CadastroAluno
 {
@@ -26,6 +28,8 @@ namespace CadastroAluno
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddScoped<IAlunoRepository, AlunoRepository>();
 
             services.AddDbContext<CadastroAlunoContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CadastroAlunoContext")));

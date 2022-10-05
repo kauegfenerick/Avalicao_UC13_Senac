@@ -21,7 +21,7 @@ namespace CadastroAluno.Repository
             return await _context.Aluno.ToListAsync();
         }
         
-        public async Task<Aluno> GetAluno(int id)
+        public async Task<Aluno> GetAluno(int? id)
         {
             return await _context.Aluno.FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -34,7 +34,7 @@ namespace CadastroAluno.Repository
 
             return aluno;
         }
-
+        
         public async Task<int> UpdateAluno(int id, Aluno alunoAlterado)
         {
             var aluno = await _context.Aluno.FirstOrDefaultAsync(a => a.Id == id);
