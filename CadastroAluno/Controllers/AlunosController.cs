@@ -64,22 +64,6 @@ namespace CadastroAluno.Controllers
             return View(aluno);
         }
 
-        // GET: Alunos/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var aluno = await _repository.Aluno.FindAsync(id);
-            if (aluno == null)
-            {
-                return NotFound();
-            }
-            return View(aluno);
-        }
-
         // POST: Alunos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -94,42 +78,9 @@ namespace CadastroAluno.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _repository.Update(aluno);
-                    await _repository.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AlunoExists(aluno.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _repository.UpdateAluno(id, aluno);
                 return RedirectToAction(nameof(Index));
             }
-            return View(aluno);
-        }
-
-        // GET: Alunos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var aluno = await _repository.Aluno
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (aluno == null)
-            {
-                return NotFound();
-            }
-
             return View(aluno);
         }
 
@@ -138,15 +89,8 @@ namespace CadastroAluno.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var aluno = await _repository.Aluno.FindAsync(id);
-            _repository.Aluno.Remove(aluno);
-            await _repository.SaveChangesAsync();
+            await _repository.DeleteAluno(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AlunoExists(int id)
-        {
-            return _repository.Aluno.Any(e => e.Id == id);
         }
     }
 }
