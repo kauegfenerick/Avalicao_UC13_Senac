@@ -80,22 +80,65 @@ namespace CadastroAluno.Test
         [Fact]
         public async void DetailsRetornaViewParaIdExistente()
         {
+            //arrange
+            AlunosController controller = new AlunosController(_repository.Object);
 
+            Aluno aluno = new Aluno();
+            aluno.Id = 1;
+
+            _repository.Setup(a => a.GetAluno(1))
+               .ReturnsAsync(aluno);
+
+            //act
+            var result = await controller.Details(1);
+
+            //assert
+            Assert.IsType<ViewResult>(result);
         }
         [Fact]
         public async void DetailsChamaRepositoryUmaVez()
         {
+            //arrange
+            AlunosController controller = new AlunosController(_repository.Object);
 
+            Aluno aluno = new Aluno();
+            aluno.Id = 2;
+
+            _repository.Setup(a => a.GetAluno(2))
+                .ReturnsAsync(aluno);
         }
         [Fact]
         public async void CreateSempreRetornaView()
         {
+            //Arrange
+            AlunosController controller = new AlunosController(_repository.Object);
 
+            //Act
+            var result = controller.Create();
+
+            //Assert
+            Assert.IsType<ViewResult>(result);
         }
         [Fact]
         public async void PostDeveValidaPropriedades()
         {
+            //arrange
+            AlunosController controller = new AlunosController(_repository.Object);
 
+            Aluno aluno = new Aluno();
+
+            aluno.Id = 1;
+            aluno.Nome = null;
+            aluno.Turma = null;
+            aluno.Media = 10;
+
+            //act
+            var total = await controller.Create(aluno);
+
+            //assert
+            _repository.Verify(ar => ar.AddAluno(aluno), Times.Once);
+
+            Assert.IsType<RedirectToActionResult>(total);
         }
     }
 }
