@@ -14,7 +14,7 @@ namespace CadastroAluno.Test
     public class AlunosControllerTest
     {
         Mock<IAlunoRepository> _repository;
-        Aluno aluno;
+        Aluno alunoValido;
 
         public AlunosControllerTest()
         {
@@ -22,58 +22,78 @@ namespace CadastroAluno.Test
         }
 
         [Fact]
-        public void IndexRetornaOkResultIndependente()
+        public async void IndexRetornaOkResultIndependente()
         {
             //arrange
             AlunosController controller = new AlunosController(_repository.Object);
 
             //act
-            var alunos = controller.Index();
+            var alunos = await controller.Index();
 
             //assert
-            Assert.IsType<ViewResult>(alunos.Result);
+            Assert.IsType<ViewResult>(alunos);
 
         }
 
         [Fact]
-        public void IndexChamaRepositoryApenasUmaVez()
+        public async void IndexChamaRepositoryApenasUmaVez()
         {
-            //arrange
+            //Arrange
+            var controller = new AlunosController(_repository.Object);
+
+            _repository.Setup(r => r.AddAluno(alunoValido))
+                .ReturnsAsync(alunoValido);
+
+            //Act
+            await controller.Create(alunoValido);
+
+            //Assert 
+            _repository.Verify(repo => repo.AddAluno(alunoValido), Times.Once);
+
+        }
+        [Fact]
+        public async void DetailsRetornaBadRequestParaIdNulo()
+        {
+            //Arrange
             AlunosController controller = new AlunosController(_repository.Object);
 
-            //act
-            _repository.Setup(r => r.GetAlunos()).Returns(Task.FromResult(new List<Aluno>()
-                {}));
+            //Act
+            var consulta = await controller.Details(-12);
 
-            //assert
+            //Assert 
+            Assert.IsType<BadRequestResult>(consulta);
         }
         [Fact]
-        public void DetailsRetornaBadRequestParaIdNulo()
+        public async void DetailsRetornaNotFoundParaIdInexistente()
+        {
+            //Arrange
+            AlunosController controller = new AlunosController(_repository.Object);
+
+            _repository.Setup(repo => repo.GetAluno(1))
+               .Returns(Task.FromResult(alunoValido));
+            //Act
+            var consulta = await controller.Details(1);
+
+            //Assert 
+            Assert.IsType<NotFoundResult>(consulta);
+        }
+        [Fact]
+        public async void DetailsRetornaViewParaIdExistente()
         {
 
         }
         [Fact]
-        public void DetailsRetornaNotFoundParaIdInexistente()
+        public async void DetailsChamaRepositoryUmaVez()
         {
 
         }
         [Fact]
-        public void DetailsRetornaViewParaIdExistente()
+        public async void CreateSempreRetornaView()
         {
 
         }
         [Fact]
-        public void DetailsChamaRepositoryUmaVez()
-        {
-
-        }
-        [Fact]
-        public void CreateSempreRetornaView()
-        {
-
-        }
-        [Fact]
-        public void PostDeveValidaPropriedades()
+        public async void PostDeveValidaPropriedades()
         {
 
         }
