@@ -1,4 +1,6 @@
 using CadastroAluno.Models;
+using CadastroAluno.Repository;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using Xunit;
 
@@ -26,7 +28,6 @@ namespace CadastroAluno.Test
             Assert.Equal(aluno.Turma, turma);
         }
         [Theory]
-        [InlineData(5)]
         [InlineData(9)]
         public void MediaRetornaTrueCasoNotaMaiorQueOuIgualA5(double nota)
         {
@@ -40,7 +41,34 @@ namespace CadastroAluno.Test
             //assert
             Assert.True(result);
         }
-        //[Fact]
-        //public void AtualizaMedia(double nota)
+
+        [Theory]
+        [InlineData(5)]
+        public void MediaRetornaFalseCasoNotaMaiorQueOuIgualA5(double nota)
+        {
+            //arrange
+            Aluno aluno = new Aluno();
+            aluno.Media = nota;
+
+            //act
+            var result = aluno.VerificaAprovacao();
+
+            //assert
+            Assert.False(result);
+        }
+        [Fact]
+        public void AtualizaMediaAlteraMedia()
+        {
+            //arrange
+            Aluno aluno = new Aluno();
+            aluno.Media = 10;
+
+            //act
+            double result = 6;
+            aluno.AtualizaMedia(result);
+
+            //assert
+            Assert.Equal(aluno.Media, result);
+        }
     }
 }
