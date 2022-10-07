@@ -28,7 +28,8 @@ namespace CadastroAluno.Test
             Assert.Equal(aluno.Turma, turma);
         }
         [Theory]
-        [InlineData(9)]
+        [InlineData(5)]
+        [InlineData(10)]
         public void MediaRetornaTrueCasoNotaMaiorQueOuIgualA5(double nota)
         {
             //arrange
@@ -43,8 +44,9 @@ namespace CadastroAluno.Test
         }
 
         [Theory]
-        [InlineData(5)]
-        public void MediaRetornaFalseCasoNotaMaiorQueOuIgualA5(double nota)
+        [InlineData(4)]
+        [InlineData(0)]
+        public void MediaRetornaFaçseCasoNotaMenorQue5(double nota)
         {
             //arrange
             Aluno aluno = new Aluno();
@@ -56,6 +58,7 @@ namespace CadastroAluno.Test
             //assert
             Assert.False(result);
         }
+
         [Fact]
         public void AtualizaMediaAlteraMedia()
         {
