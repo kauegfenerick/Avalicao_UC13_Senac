@@ -33,7 +33,7 @@ namespace CadastroAluno.Controllers
             var aluno = await _repository.GetAluno(id);
             if (aluno == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             return View(aluno);

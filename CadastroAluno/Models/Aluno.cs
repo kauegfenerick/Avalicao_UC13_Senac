@@ -14,7 +14,7 @@
         }
 
         public bool VerificaAprovacao() 
-            => Media > 5;
+            => Media >= 5;
 
         public void AtualizaMedia(double novaMedia)
         {
